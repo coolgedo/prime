@@ -1,0 +1,329 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>صيدلية Prime | المتابعة المالية</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F5F8F7;--surface:#FFFFFF;--ink:#16302A;--muted:#5D726D;--line:#D9E4E0;--green:#0E6B57;--mint:#E1F1EB;--amber:#A8650F;--amberbg:#FBF0DF;--red:#B23A3A;color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0E1916;--surface:#15231F;--ink:#E3EDE9;--muted:#93A8A2;--line:#27403A;--green:#4CC3A2;--mint:#1B3730;--amber:#E2A24B;--amberbg:#33270F;--red:#E58585;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0E1916;--surface:#15231F;--ink:#E3EDE9;--muted:#93A8A2;--line:#27403A;--green:#4CC3A2;--mint:#1B3730;--amber:#E2A24B;--amberbg:#33270F;--red:#E58585;color-scheme:dark}
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"IBM Plex Sans Arabic",Tahoma,"Segoe UI",sans-serif;font-size:16px;line-height:1.6}
+.wrap{max-width:1080px;margin:0 auto;padding:20px 16px 60px}
+header{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;margin-bottom:18px}
+h1{font-size:1.6rem;margin:0;font-weight:700;letter-spacing:0}
+h1 small{display:block;font-size:.9rem;font-weight:400;color:var(--muted)}
+.actions{display:flex;flex-wrap:wrap;gap:8px}
+button,.btn{font:inherit;cursor:pointer;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:8px 14px}
+button.primary{background:var(--green);border-color:var(--green);color:#fff}
+@media (prefers-color-scheme:dark){button.primary{color:#0E1916}}
+button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid var(--green);outline-offset:2px}
+.due{background:var(--amberbg);border:1px solid var(--amber);border-radius:14px;padding:18px 20px;margin-bottom:18px;cursor:pointer}
+.due h2{margin:0;font-size:1rem;font-weight:500;color:var(--amber)}
+.due .total{font-size:2.2rem;font-weight:700;line-height:1.2;margin:4px 0 10px}
+.due .parts{display:flex;flex-wrap:wrap;gap:8px 22px;color:var(--ink)}
+.due .parts b{font-weight:600}
+.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;margin-bottom:22px}
+.tile{text-align:right;padding:14px;border-radius:12px;border:1px solid var(--line);background:var(--surface)}
+.tile.on{border-color:var(--green);background:var(--mint);box-shadow:inset 0 0 0 1px var(--green)}
+.tile .n{font-weight:600;font-size:1.05rem}
+.tile .v{font-size:1.25rem;font-weight:700;margin-top:4px;direction:ltr;text-align:right}
+.tile .h{font-size:.8rem;color:var(--muted)}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px}
+.crumbs{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-bottom:14px;font-size:.95rem}
+.crumbs button{border:none;background:none;padding:2px 4px;color:var(--green);font-weight:600}
+.crumbs span.sep{color:var(--muted)}
+.crumbs .cur{font-weight:700}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px}
+.cell{text-align:right;padding:12px;border-radius:10px;border:1px solid var(--line);background:var(--bg)}
+.cell .l{font-weight:600}
+.cell .v{direction:ltr;text-align:right;font-weight:600;margin-top:2px}
+.cell.dim{opacity:.55}
+.cell.now{border-color:var(--green)}
+.sum{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin-bottom:16px}
+.sum div{padding:10px 12px;border-radius:10px;background:var(--mint)}
+.sum small{display:block;color:var(--muted)}
+.sum b{direction:ltr;display:block;text-align:right;font-size:1.1rem}
+h3{font-size:1rem;margin:18px 0 8px}
+.tbl{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:.93rem}
+th,td{padding:8px 6px;border-bottom:1px solid var(--line);text-align:right;vertical-align:top}
+th{color:var(--muted);font-weight:500}
+td.num{direction:ltr;text-align:right;white-space:nowrap;font-weight:600}
+.neg{color:var(--red)}
+.pos{color:var(--green)}
+td button{padding:3px 9px;font-size:.85rem}
+.empty{color:var(--muted);padding:12px 0}
+.tag{display:inline-block;font-size:.8rem;padding:1px 8px;border-radius:20px;background:var(--mint)}
+.tag.late{background:var(--amberbg);color:var(--amber)}
+dialog{border:1px solid var(--line);border-radius:14px;background:var(--surface);color:var(--ink);padding:20px;width:min(440px,92vw)}
+dialog::backdrop{background:rgba(0,0,0,.45)}
+dialog h2{margin:0 0 12px;font-size:1.15rem}
+label{display:block;margin-bottom:10px;font-size:.9rem;color:var(--muted)}
+input,select{display:block;width:100%;margin-top:4px;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px 10px}
+.row{display:flex;gap:8px;justify-content:flex-start;margin-top:14px}
+.hint{font-size:.82rem;color:var(--muted);margin:-4px 0 10px}
+.foot{margin-top:22px;font-size:.85rem;color:var(--muted)}
+@media (prefers-reduced-motion:no-preference){.panel{transition:opacity .15s}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>صيدلية Prime<small id="today"></small></h1>
+    <div class="actions">
+      <button class="primary" onclick="openTx()">إضافة حركة</button>
+      <button onclick="openOb()">إضافة التزام</button>
+      <button onclick="exportData()">حفظ نسخة</button>
+      <button onclick="document.getElementById('imp').click()">استرجاع نسخة</button>
+      <input type="file" id="imp" accept=".json" hidden onchange="importData(this)">
+    </div>
+  </header>
+
+  <section class="due" id="due" onclick="go('ob',nextYM().y,nextYM().m)" role="button" tabindex="0"></section>
+  <section class="tiles" id="tiles"></section>
+  <section class="panel" id="panel"></section>
+
+  <p class="foot">البيانات محفوظة على هذا الجهاز وهذا المتصفح فقط. احفظ نسخة بانتظام لتنقلها لجهاز آخر.
+    <button onclick="loadDemo()">تحميل بيانات تجريبية</button>
+    <button onclick="wipe()">مسح كل البيانات</button>
+    العملة: <input id="cur" style="display:inline-block;width:80px" onchange="setCur(this.value)">
+  </p>
+</div>
+
+<dialog id="txDlg">
+  <form method="dialog" onsubmit="saveTx(event)">
+    <h2>إضافة حركة</h2>
+    <label>نوع الحركة<select id="tKind" onchange="syncTx()"></select></label>
+    <p class="hint" id="tHint"></p>
+    <label>التاريخ<input type="date" id="tDate" required></label>
+    <label id="tPartyL"><span id="tPartyN">الاسم</span><input id="tParty" list="parties"></label>
+    <label>المبلغ<input type="number" id="tAmt" step="0.001" required></label>
+    <label>ملاحظة<input id="tNote"></label>
+    <div class="row"><button class="primary" type="submit">حفظ الحركة</button><button type="button" onclick="txDlg.close()">إلغاء</button></div>
+  </form>
+</dialog>
+
+<dialog id="obDlg">
+  <form method="dialog" onsubmit="saveOb(event)">
+    <h2>إضافة التزام مستحق</h2>
+    <label>النوع<select id="oKind"><option value="sup">موردين</option><option value="sal">رواتب</option><option value="exp">مصروفات</option><option value="other">أخرى</option></select></label>
+    <label>تاريخ الاستحقاق<input type="date" id="oDate" required></label>
+    <label>الجهة (مورد / موظف / بند)<input id="oParty" list="parties" required></label>
+    <label>المبلغ<input type="number" id="oAmt" step="0.001" min="0" required></label>
+    <label>ملاحظة<input id="oNote"></label>
+    <div class="row"><button class="primary" type="submit">حفظ الالتزام</button><button type="button" onclick="obDlg.close()">إلغاء</button></div>
+  </form>
+</dialog>
+<datalist id="parties"></datalist>
+
+<script>
+const KEY='prime-pharmacy-v1';
+const MONTHS=['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];
+const KINDS={
+  open_bank:{label:'رصيد افتتاحي للبنك',bank:1,hint:'مرة واحدة عند البداية'},
+  deposit:{label:'إيداع في البنك (مبيعات / تحصيل)',bank:1},
+  withdraw:{label:'سحب من البنك',bank:-1},
+  open_inv:{label:'رصيد افتتاحي للمخزون',inv:1,hint:'قيمة المخزون بسعر التكلفة عند البداية'},
+  purchase:{label:'فاتورة شراء آجلة من مورد',sup:1,inv:1,party:'اسم المورد',hint:'تزيد المخزون والمستحق للمورد'},
+  open_sup:{label:'رصيد افتتاحي لمورد',sup:1,party:'اسم المورد'},
+  sup_pay:{label:'سداد لمورد من البنك',sup:-1,bank:-1,party:'اسم المورد',hint:'تخصم من البنك ومن رصيد المورد'},
+  cogs:{label:'تكلفة بضاعة مباعة',inv:-1,hint:'تخصم من قيمة المخزون'},
+  inv_adj:{label:'تسوية جرد المخزون',inv:1,signed:true,hint:'اكتب المبلغ بالسالب للعجز وبالموجب للزيادة'},
+  salary:{label:'صرف رواتب من البنك',sal:1,bank:-1,party:'اسم الموظف'},
+  expense:{label:'مصروف من البنك',exp:1,bank:-1,party:'بند المصروف (إيجار، كهرباء...)'}
+};
+const SECTIONS={
+  bank:{name:'البنك',type:'bal',hint:'الرصيد الحالي'},
+  inv:{name:'المخزون',type:'bal',hint:'قيمة المخزون الحالية'},
+  sup:{name:'الموردين',type:'bal',hint:'المستحق للموردين'},
+  sal:{name:'الرواتب',type:'flow',hint:'رواتب هذا الشهر'},
+  exp:{name:'المصروفات',type:'flow',hint:'مصروفات هذا الشهر'},
+  ob:{name:'الالتزامات',type:'ob',hint:'مستحق الشهر القادم'}
+};
+const OBK={sup:'موردين',sal:'رواتب',exp:'مصروفات',other:'أخرى'};
+const OB2TX={sup:'sup_pay',sal:'salary',exp:'expense',other:'withdraw'};
+
+let D={tx:[],ob:[],cur:'د.ك'};
+let V={sec:'bank',y:null,m:null};
+
+function load(){try{const s=localStorage.getItem(KEY);if(s)D=Object.assign(D,JSON.parse(s))}catch(e){}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(D))}catch(e){alert('تعذر الحفظ على المتصفح. احفظ نسخة يدويًا.')}render()}
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+const pad=n=>String(n).padStart(2,'0');
+const ym=(y,m)=>y+'-'+pad(m+1);
+function todayStr(){const d=new Date();return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())}
+function nowYM(){const d=new Date();return{y:d.getFullYear(),m:d.getMonth()}}
+function nextYM(){const d=new Date();d.setDate(1);d.setMonth(d.getMonth()+1);return{y:d.getFullYear(),m:d.getMonth()}}
+function fmt(n){return (Math.round(n*1000)/1000).toLocaleString('en-US',{maximumFractionDigits:3})+' '+D.cur}
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const eff=(t,s)=>(KINDS[t.kind]?.[s]||0)*t.amount;
+
+// balances & flows
+const balTo=(s,key)=>D.tx.filter(t=>t.date.slice(0,key.length)<=key).reduce((a,t)=>a+eff(t,s),0);
+const flowIn=(s,key)=>D.tx.filter(t=>t.date.startsWith(key)).reduce((a,t)=>a+eff(t,s),0);
+const obIn=(key,onlyOpen)=>D.ob.filter(o=>o.due.startsWith(key)&&(!onlyOpen||!o.paid));
+const sumOb=a=>a.reduce((x,o)=>x+o.amount,0);
+function hasData(s,key){return s==='ob'?obIn(key).length>0:D.tx.some(t=>t.date.startsWith(key)&&eff(t,s)!==0)}
+
+function homeValue(s){
+  const n=nowYM(),k=ym(n.y,n.m),nx=nextYM();
+  if(SECTIONS[s].type==='bal')return balTo(s,'9999');
+  if(SECTIONS[s].type==='flow')return flowIn(s,k);
+  return sumOb(obIn(ym(nx.y,nx.m),true));
+}
+function years(s){
+  const set=new Set([nowYM().y]);
+  if(s==='ob'){D.ob.forEach(o=>set.add(+o.due.slice(0,4)));set.add(nextYM().y)}
+  else D.tx.forEach(t=>{if(eff(t,s))set.add(+t.date.slice(0,4))});
+  return [...set].sort((a,b)=>b-a);
+}
+
+function render(){
+  document.getElementById('cur').value=D.cur;
+  const parties=new Set([...D.tx.map(t=>t.party),...D.ob.map(o=>o.party)].filter(Boolean));
+  document.getElementById('parties').innerHTML=[...parties].map(p=>`<option value="${esc(p)}">`).join('');
+  // due band
+  const nx=nextYM(),list=obIn(ym(nx.y,nx.m),true);
+  const by=k=>sumOb(list.filter(o=>o.kind===k));
+  document.getElementById('due').innerHTML=`<h2>المطلوب سداده في ${MONTHS[nx.m]} ${nx.y}</h2>
+    <div class="total" dir="ltr" style="text-align:right">${fmt(sumOb(list))}</div>
+    <div class="parts">${Object.keys(OBK).map(k=>`<span>${OBK[k]}: <b dir="ltr">${fmt(by(k))}</b></span>`).join('')}
+    <span>رصيد البنك الآن يغطي: <b>${balTo('bank','9999')>=sumOb(list)?'نعم':'لا، يوجد عجز '+fmt(sumOb(list)-balTo('bank','9999'))}</b></span></div>`;
+  // tiles
+  document.getElementById('tiles').innerHTML=Object.entries(SECTIONS).map(([k,s])=>
+    `<button class="tile ${V.sec===k?'on':''}" onclick="go('${k}')"><div class="n">${s.name}</div><div class="v">${fmt(homeValue(k))}</div><div class="h">${s.hint}</div></button>`).join('');
+  renderPanel();
+}
+
+function go(sec,y=null,m=null){V={sec,y,m};render();document.getElementById('panel').scrollIntoView({behavior:'smooth',block:'nearest'})}
+
+function crumbs(){
+  const s=SECTIONS[V.sec];let h=`<nav class="crumbs">`;
+  h+=V.y===null?`<span class="cur">${s.name}</span>`:`<button onclick="go('${V.sec}')">${s.name}</button>`;
+  if(V.y!==null){h+=`<span class="sep">‹</span>`;h+=V.m===null?`<span class="cur">${V.y}</span>`:`<button onclick="go('${V.sec}',${V.y})">${V.y}</button>`}
+  if(V.m!==null)h+=`<span class="sep">‹</span><span class="cur">${MONTHS[V.m]}</span>`;
+  return h+`</nav>`;
+}
+
+function cellValue(s,key,isYear){
+  const t=SECTIONS[s].type;
+  if(t==='bal')return balTo(s,key);
+  if(t==='flow')return flowIn(s,key);
+  return sumOb(obIn(key,false));
+}
+
+function renderPanel(){
+  const p=document.getElementById('panel'),s=V.sec,T=SECTIONS[s].type;let h=crumbs();
+  const n=nowYM();
+  if(V.y===null){
+    const lbl=T==='bal'?'الرصيد في نهاية السنة':T==='flow'?'إجمالي السنة':'إجمالي الالتزامات';
+    h+=`<div class="grid">`+years(s).map(y=>`<button class="cell ${y===n.y?'now':''}" onclick="go('${s}',${y})"><div class="l">${y}</div><div class="h" style="font-size:.78rem;color:var(--muted)">${lbl}</div><div class="v">${fmt(cellValue(s,String(y)))}</div></button>`).join('')+`</div>`;
+  } else if(V.m===null){
+    h+=`<div class="grid">`+MONTHS.map((mn,i)=>{
+      const key=ym(V.y,i),future=key>ym(n.y,n.m);
+      const show=T==='ob'||!future||hasData(s,key);
+      return `<button class="cell ${hasData(s,key)?'':'dim'} ${key===ym(n.y,n.m)?'now':''}" onclick="go('${s}',${V.y},${i})"><div class="l">${mn}</div><div class="v">${show?fmt(cellValue(s,key)):'—'}</div></button>`}).join('')+`</div>`;
+  } else h+=monthDetail(s,V.y,V.m);
+  p.innerHTML=h;
+}
+
+function prevKey(y,m){return m===0?ym(y-1,11):ym(y,m-1)}
+
+function monthDetail(s,y,m){
+  const key=ym(y,m),T=SECTIONS[s].type;let h='';
+  if(T==='ob'){
+    const list=obIn(key,false).sort((a,b)=>a.due.localeCompare(b.due));
+    const open=list.filter(o=>!o.paid);
+    h+=`<div class="sum"><div><small>إجمالي المستحق</small><b>${fmt(sumOb(list))}</b></div><div><small>لم يُسدد</small><b>${fmt(sumOb(open))}</b></div>`+
+      Object.keys(OBK).map(k=>`<div><small>${OBK[k]} (لم يُسدد)</small><b>${fmt(sumOb(open.filter(o=>o.kind===k)))}</b></div>`).join('')+`</div>`;
+    if(!list.length)return h+`<p class="empty">لا توجد التزامات في هذا الشهر. أضف التزامًا من زر إضافة التزام.</p>`;
+    const td=todayStr();
+    return h+`<div class="tbl"><table><tr><th>الاستحقاق</th><th>النوع</th><th>الجهة</th><th>المبلغ</th><th>الحالة</th><th></th></tr>`+
+      list.map(o=>`<tr><td>${o.due}</td><td>${OBK[o.kind]}</td><td>${esc(o.party)}${o.note?'<br><small>'+esc(o.note)+'</small>':''}</td><td class="num">${fmt(o.amount)}</td>
+      <td><button onclick="togglePaid('${o.id}')">${o.paid?'مدفوع ✓':(o.due<td?'<span class="tag late">متأخر</span>':'')+' تسجيل السداد'}</button></td>
+      <td><button onclick="delOb('${o.id}')">حذف</button></td></tr>`).join('')+`</table></div>`;
+  }
+  const txs=D.tx.filter(t=>t.date.startsWith(key)&&eff(t,s)!==0).sort((a,b)=>a.date.localeCompare(b.date));
+  if(T==='bal'){
+    const open=balTo(s,prevKey(y,m)),inc=txs.reduce((a,t)=>a+Math.max(eff(t,s),0),0),out=txs.reduce((a,t)=>a+Math.min(eff(t,s),0),0);
+    const words={bank:['داخل','خارج'],inv:['إضافات','صرف'],sup:['فواتير جديدة','سداد']}[s];
+    h+=`<div class="sum"><div><small>رصيد أول الشهر</small><b>${fmt(open)}</b></div><div><small>${words[0]}</small><b class="pos">${fmt(inc)}</b></div><div><small>${words[1]}</small><b class="neg">${fmt(-out)}</b></div><div><small>رصيد آخر الشهر</small><b>${fmt(open+inc+out)}</b></div></div>`;
+    if(s==='sup'){
+      const bal={};D.tx.filter(t=>t.date.slice(0,7)<=key&&eff(t,'sup')).forEach(t=>bal[t.party||'بدون اسم']=(bal[t.party||'بدون اسم']||0)+eff(t,'sup'));
+      const rows=Object.entries(bal).filter(([,v])=>Math.abs(v)>0.0005).sort((a,b)=>b[1]-a[1]);
+      h+=`<h3>رصيد كل مورد في نهاية ${MONTHS[m]}</h3>`+(rows.length?`<div class="tbl"><table><tr><th>المورد</th><th>المستحق</th></tr>${rows.map(([k,v])=>`<tr><td>${esc(k)}</td><td class="num">${fmt(v)}</td></tr>`).join('')}</table></div>`:`<p class="empty">لا توجد أرصدة موردين.</p>`);
+    }
+  } else {
+    const by={};txs.forEach(t=>by[t.party||'بدون اسم']=(by[t.party||'بدون اسم']||0)+eff(t,s));
+    h+=`<div class="sum"><div><small>إجمالي ${MONTHS[m]}</small><b>${fmt(flowIn(s,key))}</b></div>`+Object.entries(by).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`<div><small>${esc(k)}</small><b>${fmt(v)}</b></div>`).join('')+`</div>`;
+  }
+  h+=`<h3>حركات ${MONTHS[m]} ${y}</h3>`;
+  if(!txs.length)return h+`<p class="empty">لا توجد حركات في هذا الشهر. أضف حركة من زر إضافة حركة.</p>`;
+  return h+`<div class="tbl"><table><tr><th>التاريخ</th><th>الحركة</th><th>الجهة</th><th>المبلغ</th><th></th></tr>`+
+    txs.map(t=>{const v=eff(t,s);return `<tr><td>${t.date}</td><td>${KINDS[t.kind].label}${t.note?'<br><small>'+esc(t.note)+'</small>':''}</td><td>${esc(t.party||'')}</td><td class="num ${T==='bal'?(v<0?'neg':'pos'):''}">${fmt(v)}</td><td><button onclick="delTx('${t.id}')">حذف</button></td></tr>`}).join('')+`</table></div>`;
+}
+
+// forms
+const txDlg=document.getElementById('txDlg'),obDlg=document.getElementById('obDlg');
+document.getElementById('tKind').innerHTML=Object.entries(KINDS).map(([k,v])=>`<option value="${k}">${v.label}</option>`).join('');
+function openTx(){document.getElementById('tDate').value=todayStr();['tParty','tAmt','tNote'].forEach(i=>document.getElementById(i).value='');syncTx();txDlg.showModal()}
+function syncTx(){const k=KINDS[document.getElementById('tKind').value];
+  document.getElementById('tHint').textContent=k.hint||'';
+  document.getElementById('tPartyL').style.display=k.party?'block':'none';
+  document.getElementById('tPartyN').textContent=k.party||'';
+  document.getElementById('tAmt').min=k.signed?'':'0';}
+function saveTx(e){e.preventDefault();const kind=document.getElementById('tKind').value,amount=parseFloat(document.getElementById('tAmt').value);
+  if(!amount){alert('اكتب المبلغ');return}
+  D.tx.push({id:uid(),kind,date:document.getElementById('tDate').value,party:KINDS[kind].party?document.getElementById('tParty').value.trim():'',amount,note:document.getElementById('tNote').value.trim()});
+  txDlg.close();save();}
+function openOb(){const nx=nextYM();document.getElementById('oDate').value=ym(nx.y,nx.m)+'-01';['oParty','oAmt','oNote'].forEach(i=>document.getElementById(i).value='');obDlg.showModal()}
+function saveOb(e){e.preventDefault();
+  D.ob.push({id:uid(),kind:document.getElementById('oKind').value,due:document.getElementById('oDate').value,party:document.getElementById('oParty').value.trim(),amount:parseFloat(document.getElementById('oAmt').value)||0,note:document.getElementById('oNote').value.trim(),paid:false});
+  obDlg.close();save();}
+function togglePaid(id){const o=D.ob.find(x=>x.id===id);if(!o)return;
+  if(!o.paid&&confirm('تسجيل السداد أيضًا كحركة خصم من البنك بتاريخ اليوم؟'))
+    D.tx.push({id:uid(),kind:OB2TX[o.kind],date:todayStr(),party:o.party,amount:o.amount,note:'سداد التزام '+o.due});
+  o.paid=!o.paid;save();}
+function delTx(id){if(confirm('حذف هذه الحركة؟')){D.tx=D.tx.filter(t=>t.id!==id);save()}}
+function delOb(id){if(confirm('حذف هذا الالتزام؟')){D.ob=D.ob.filter(o=>o.id!==id);save()}}
+function setCur(v){D.cur=v.trim()||'د.ك';save()}
+
+// backup
+function exportData(){const b=new Blob([JSON.stringify(D,null,1)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='prime-backup-'+todayStr()+'.json';a.click()}
+function importData(inp){const f=inp.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const x=JSON.parse(r.result);if(!Array.isArray(x.tx))throw 0;if(confirm('استبدال البيانات الحالية بالنسخة المختارة؟')){D=Object.assign({tx:[],ob:[],cur:'د.ك'},x);save()}}catch(e){alert('الملف غير صالح. اختر ملف نسخة محفوظ من هذه اللوحة.')}inp.value=''};r.readAsText(f)}
+function wipe(){if(confirm('مسح كل البيانات نهائيًا؟ احفظ نسخة أولًا.')){D={tx:[],ob:[],cur:D.cur};save()}}
+
+function loadDemo(){
+  if(D.tx.length&&!confirm('سيتم استبدال بياناتك ببيانات تجريبية. متابعة؟'))return;
+  const n=nowYM(),tx=[],ob=[],d=(y,m,day)=>ym(y,m)+'-'+pad(day);
+  let y=n.y,m=n.m-5;if(m<0){m+=12;y--}
+  tx.push({id:uid(),kind:'open_bank',date:d(y,m,1),amount:12000,party:'',note:''},{id:uid(),kind:'open_inv',date:d(y,m,1),amount:30000,party:'',note:''},{id:uid(),kind:'open_sup',date:d(y,m,1),amount:6000,party:'مستودع الأدوية المتحد',note:''});
+  for(let i=0;i<6;i++){
+    tx.push({id:uid(),kind:'deposit',date:d(y,m,10),amount:9000+i*400,party:'',note:'مبيعات'},
+      {id:uid(),kind:'purchase',date:d(y,m,5),amount:5000+i*200,party:i%2?'شركة الدواء الحديثة':'مستودع الأدوية المتحد',note:''},
+      {id:uid(),kind:'cogs',date:d(y,m,28),amount:5200+i*250,party:'',note:''},
+      {id:uid(),kind:'sup_pay',date:d(y,m,20),amount:4500,party:i%2?'شركة الدواء الحديثة':'مستودع الأدوية المتحد',note:''},
+      {id:uid(),kind:'salary',date:d(y,m,27),amount:1200,party:'صيدلي',note:''},{id:uid(),kind:'salary',date:d(y,m,27),amount:600,party:'مساعد صيدلي',note:''},
+      {id:uid(),kind:'expense',date:d(y,m,3),amount:900,party:'إيجار',note:''},{id:uid(),kind:'expense',date:d(y,m,15),amount:120,party:'كهرباء',note:''});
+    m++;if(m>11){m=0;y++}
+  }
+  const nx=nextYM();
+  ob.push({id:uid(),kind:'sup',due:d(nx.y,nx.m,10),party:'مستودع الأدوية المتحد',amount:3500,note:'',paid:false},
+    {id:uid(),kind:'sup',due:d(nx.y,nx.m,20),party:'شركة الدواء الحديثة',amount:2800,note:'',paid:false},
+    {id:uid(),kind:'sal',due:d(nx.y,nx.m,27),party:'رواتب الموظفين',amount:1800,note:'',paid:false},
+    {id:uid(),kind:'exp',due:d(nx.y,nx.m,3),party:'إيجار',amount:900,note:'',paid:false});
+  D={tx,ob,cur:D.cur};save();
+}
+
+document.getElementById('due').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('due').click()});
+document.getElementById('today').textContent='اللوحة المالية · '+new Date().toLocaleDateString('ar-EG',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+load();render();
+</script>
+</body>
+</html>
